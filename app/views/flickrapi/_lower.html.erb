@@ -1,0 +1,46 @@
+
+
+<script>
+
+var api_key = gon.api_key;
+var keysearch = "<%= @keysearch || nil %>";
+
+if (keysearch != "") {
+//-----
+	var t = keysearch.split(" ");
+	var key1 = "text=";
+	var key2 = "&tags="
+	for (var i in t) {
+		key1 += t[i]+"+";	
+		key2 += t[i]+"+";	
+	}
+	var search_key1 = key1.substring(0, key1.length-1);
+	var search_key2 = key2.substring(0, key2.length-1);
+	var url="https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key="+api_key+"&"+search_key1+search_key2+"&per_page=200&format=json&jsoncallback=?";
+	//-------
+}
+else {
+	var url="https://api.flickr.com/services/rest/?method=flickr.interestingness.getList&api_key="+api_key+"&per_page=100&format=json&jsoncallback=?";
+}
+$.getJSON(url,function(data){
+	$.each(data.photos.photo,function(i,item){
+		var realname_url="https://api.flickr.com/services/rest/?method=flickr.people.getInfo&api_key="+api_key+"&user_id="+item.owner+"&format=json&jsoncallback=?";
+		$.getJSON(realname_url, function(data1){
+			
+			var name = (data1.person.realname._content ? data1.person.realname._content : 'undefined');
+			var location = (data1.person.location._content ? data1.person.location._content : 'undefined');
+			var time = (data1.person.photos.firstdatetaken._content ? data1.person.photos.firstdatetaken._content : 'undefined');
+			var image_url = 'http://farm' + item.farm + '.static.flickr.com/' + item.server + '/' + item.id + '_' + item.secret + '_n.jpg';
+			var photo_form = '<div class = "block"><img src="' + image_url + '" id = "image" width = "300" height = "300") ><div class = "hid"><div class = "group_info"><p class="title">' + item.title + '</p><p class="info" id="author"> Author: ' + name + '</p><p class="info" id="location"> Location: ' + location + '</p><p class="info" id = "time"> Time: ' + time + '</p></div></div></img></div>';
+
+			$(photo_form).appendTo('#dummy');
+		});
+	});
+});
+
+</script>
+
+
+
+
+

@@ -1,0 +1,85 @@
+<script src="//code.jquery.com/jquery-2.1.4.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/themes/base/jquery-ui.css" rel="stylesheet">
+<script>
+  $(function() {    
+    var alltags = <%= raw @alltags %>;
+
+    $( "#search" ).autocomplete({
+      source: alltags
+    });
+  });
+  </script>
+<div class = "header">
+	<div class = "flickr">
+		<h1 id="f">F</h1>
+		<h1 id="l">L</h1>
+		<h1 id="i">I</h1>
+		<h1 id="c">C</h1>
+		<h1 id="k">K</h1>
+		<h1 id="r">R</h1>
+		<h1 id="a">A</h1>
+		<h1 id="p">P</h1>
+		<h1 id="i">I</h1>	
+	</div>
+	<br/>
+	<br/>
+
+	<div class = "search">
+		<%= form_tag(:action => 'show') do %>
+		<%= text_field(:flickrapi,:name,{:placeholder => "Photos, people", :class => "textfield", :id => "search"}) %>
+		<%= submit_tag("Search" , :class => "button") %>
+		<% end %>
+		
+	</div>
+	<br/>
+	<br/>
+
+	<div class = "nav">
+		<%= link_to "Home", :action => 'index' %>
+		<p> About
+		<p> Arrangement
+	</div>
+</div>
+
+<script>
+  function update(stream) {
+    document.querySelector('video').src = stream.url;
+  }
+</script>
+<div id="dummy"></div>
+<script>
+	$(document).on('click','.block',function(e){
+		var obj = $(this).clone();
+
+		$(obj).find('img').removeAttr('height');
+		$(obj).find('img').removeAttr('width');
+		$(obj).find('img').addClass('realimage');
+		var oldlink = $(obj).find('img').attr('src');
+
+		var newlink = oldlink.substr(0,oldlink.length-5)+'b.jpg';
+		$(obj).find('img').removeAttr('src');
+		$(obj).find('img').attr('src',newlink);
+		$(obj).find('.hid').attr('class','hid2');
+		$(obj).find('.group_info').attr('class','group_info2');
+		$(obj).find('.info').attr('class','info2');
+		$(obj).attr('class','block2');
+		$(obj).find('.title').attr('class','title2');
+	
+		$(obj).dialog({
+			width:'auto',
+			draggable: false,
+			show:500,
+			hide:1000,
+			position: {my:"left top", at:"left top", of : window},	
+		});
+	
+		$(document).click(function(){
+		
+			$(obj).dialog("close");
+		
+		});
+					
+	});
+
+</script>
